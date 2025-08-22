@@ -62,7 +62,6 @@ local Window = Rayfield:CreateWindow({
    ScrollEnabled = true
 })
 
---Pagina Counter Blox Legit
 local CounterBloxLegitTab = Window:CreateTab("Counter Blox Legit")
 
 CounterBloxLegitTab:CreateParagraph({
@@ -70,14 +69,11 @@ CounterBloxLegitTab:CreateParagraph({
     Content = "ESP automático que destaca inimigos e objetos importantes no mapa. Funciona apenas para inimigos de times diferentes, mostrando posição e informações de forma clara."
 })
 
--- Configurações ESP
 local ESPEnabled = false
-local EnemyColor = Color3.fromRGB(255, 50, 50) -- Cor dos inimigos
+local EnemyColor = Color3.fromRGB(255, 50, 50)
 
--- Storage para elementos ESP
 local Highlights = {}
 
--- Função para checar se jogador é inimigo
 local function IsSameTeam(player1, player2)
     if not player1 or not player2 then return false end
     if player1.Team and player2.Team then
@@ -86,7 +82,6 @@ local function IsSameTeam(player1, player2)
     return false
 end
 
--- Criar ESP para jogador
 local function CreateESP(player)
     if not player.Character or player == game.Players.LocalPlayer then return end
     if IsSameTeam(player, game.Players.LocalPlayer) then return end
@@ -104,7 +99,6 @@ local function CreateESP(player)
     Highlights[player] = highlight
 end
 
--- Atualizar ESP completo
 local function UpdateESP()
     for player, highlight in pairs(Highlights) do
         if highlight then highlight:Destroy() end
@@ -119,7 +113,6 @@ local function UpdateESP()
     end
 end
 
--- Listeners
 game.Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function()
         if ESPEnabled then task.wait(1) CreateESP(player) end
@@ -144,12 +137,10 @@ game.Players.LocalPlayer:GetPropertyChangedSignal("Team"):Connect(function()
     if ESPEnabled then task.wait(0.5) UpdateESP() end
 end)
 
--- Loop para atualizar ESP
 game:GetService("RunService").Heartbeat:Connect(function()
     if ESPEnabled then UpdateESP() end
 end)
 
--- UI
 CounterBloxLegitTab:CreateToggle({
     Name = "ESP Counter-Strike",
     CurrentValue = false,
@@ -181,20 +172,17 @@ CounterBloxLegitTab:CreateParagraph({
 	Content = "Aimbot automático que gruda nos inimigos quando você olha para eles. Funciona apenas com inimigos de times diferentes."
 })
 
--- Aimbot Melhorado - AUTOMÁTICO
 local Camera = Workspace.CurrentCamera
 local Mouse = LocalPlayer:GetMouse()
 
--- Config
 local AimbotAtivo = false
 local FOVSize = 300
 local SmoothnessFactor = 0.25
 local MaxWorldDistance = 2000
 local HeadBias = Vector3.new(0, 0.1, 0)
 
-local LockedTarget = nil -- alvo travado
+local LockedTarget = nil
 
--- Verifica inimigo válido e visível
 local function IsTargetValid(plr)
     if not plr or plr == LocalPlayer then return false end
     local char = plr.Character
@@ -208,7 +196,6 @@ local function IsTargetValid(plr)
         return false
     end
 
-    -- Checa linha de visão
     local origin = Camera.CFrame.Position
     local direction = (head.Position - origin)
     local rayParams = RaycastParams.new()
@@ -223,7 +210,6 @@ local function IsTargetValid(plr)
     return true
 end
 
--- Pega inimigo mais próximo do centro da tela
 local function GetClosestEnemy()
     local mousePos = Vector2.new(Mouse.X, Mouse.Y)
     local closest, shortestDist = nil, math.huge
@@ -246,14 +232,12 @@ local function GetClosestEnemy()
     return closest
 end
 
--- Loop principal do aimbot
 RunService.RenderStepped:Connect(function()
     if not AimbotAtivo then
         LockedTarget = nil
         return
     end
 
-    -- Mantém alvo travado se ainda for válido, senão pega novo
     if not LockedTarget or not IsTargetValid(LockedTarget) then
         LockedTarget = GetClosestEnemy()
     end
@@ -266,7 +250,6 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- UI Aimbot
 CounterBloxLegitTab:CreateToggle({
     Name = "Aimbot (Cabeça)",
     CurrentValue = false,
@@ -309,12 +292,10 @@ CounterBloxLegitTab:CreateSlider({
     Callback = function(v) MaxWorldDistance = v end,
 })
 
---Aba Configuração
 local ConfigTab = Window:CreateTab("Configuração")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
 
--- Variáveis para guardar valores originais
 local OriginalSettings = {
     GlobalShadows = Lighting.GlobalShadows,
     ShadowSoftness = Lighting.ShadowSoftness,
@@ -326,7 +307,6 @@ local OriginalSettings = {
 
 local OptimizationEnabled = false
 
--- Função para ativar otimização
 local function EnableOptimization()
     Lighting.GlobalShadows = false
     Lighting.ShadowSoftness = 0
@@ -334,7 +314,6 @@ local function EnableOptimization()
     Lighting.Brightness = 2
     Lighting.Ambient = Color3.fromRGB(200,200,200)
     
-    -- Desligar efeitos de partículas, explosões, etc
     for _, obj in pairs(workspace:GetDescendants()) do
         if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Explosion") then
             obj.Enabled = false
@@ -342,7 +321,6 @@ local function EnableOptimization()
     end
 end
 
--- Função para restaurar valores originais
 local function DisableOptimization()
     Lighting.GlobalShadows = OriginalSettings.GlobalShadows
     Lighting.ShadowSoftness = OriginalSettings.ShadowSoftness
@@ -357,7 +335,6 @@ local function DisableOptimization()
     end
 end
 
--- UI Toggle
 ConfigTab:CreateToggle({
     Name = "Otimização Gráfica",
     CurrentValue = false,
@@ -372,12 +349,10 @@ ConfigTab:CreateToggle({
     end,
 })
 
---Discord.gg/EcoHub
-
 ConfigTab:CreateButton({
     Name = "Copiar link do Discord Eco Hub",
     Callback = function()
-        setclipboard("https://discord.gg/abygGhvRCG") -- Copia o link para o clipboard
+        setclipboard("https://discord.gg/abygGhvRCG")
         Rayfield:Notify({
             Title = "Discord",
             Content = "Link do Discord copiado para a área de transferência!",
@@ -386,7 +361,6 @@ ConfigTab:CreateButton({
     end
 })
 
--- Final Codigo 
 Rayfield:Notify({
     Title = "Eco Hub - Counter Blox",
     Content = "by rip_sheldoohz - Aimbot automático e ESP personalizado carregados!",
