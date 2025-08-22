@@ -1,3 +1,6 @@
+-- Painel Atualizado
+-- Atualizado Esp & Aimbot
+-- Discord.gg/EcoHub
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local RunService = game:GetService("RunService")
